@@ -1,0 +1,7 @@
+development:
+  clients:
+    default:
+      uri: mongodb+srv://jgsierraa:InMortaLIty3@cluster0.i3qwq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+      options:
+        server_selection_timeout: 5
+
