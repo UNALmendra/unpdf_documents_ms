@@ -60,9 +60,9 @@ class DocumentsController < ApplicationController
     new_document = { "name" => name, "type" => type, "user" => user, "storage" => filename }
     @document = Document.new(new_document)
     if @document.save
-      puts "it saved the document"
+      render json: @document 
     else
-      puts @document.errors
+      render json: @document.errors
     end
     # respond_to do |format|
     #   if @document.save
