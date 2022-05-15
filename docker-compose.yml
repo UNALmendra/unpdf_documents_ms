@@ -11,7 +11,7 @@ services:
       - "27017:27017"
   app:
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS='./unpdf-349523-467b71111f84.json'
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/unpdf-349523-467b71111f84.json
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
