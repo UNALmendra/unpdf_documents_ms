@@ -35,7 +35,7 @@ class DocumentsController < ApplicationController
 
     file_base64 = params[:file]
     decode_base64_content = Base64.decode64(file_base64)
-    encoded_name_file = "#{SecureRandom.hex(3)}.pdf"
+    encoded_name_file = "#{name}#{SecureRandom.hex(3)}.#{type}"
     filename = Rails.root.join(user, encoded_name_file)
     ensure_tmp_dir_exists_for filename
     File.open(filename, 'wb') do |f|
