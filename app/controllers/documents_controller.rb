@@ -37,7 +37,6 @@ class DocumentsController < ApplicationController
     decode_base64_content = Base64.decode64(file_base64)
     encoded_name_file = "#{SecureRandom.hex(3)}.pdf"
     filename = Rails.root.join(user, encoded_name_file)
-    puts filename
     ensure_tmp_dir_exists_for filename
     File.open(filename, 'wb') do |f|
       f.write(decode_base64_content)
@@ -51,7 +50,6 @@ class DocumentsController < ApplicationController
     bucket  = storage.bucket bucket_name, skip_lookup: true
     bucket.create_file file, filename
     puts "Uploaded #{name} as #{filename} in bucket #{bucket_name}"
-
     new_document = { "name" => name, "type" => type, "user" => user, "storage" => filename }
     @document = Document.new(new_document)
     if @document.save
