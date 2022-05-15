@@ -8,6 +8,13 @@ class DocumentsController < ApplicationController
     rescue Errno::EEXIST
   end
 
+  # GET documents_user/:user
+  def documents_of_user
+    user = params["user"]
+    @document = Document.where(:user => user)
+    render json: @document
+  end
+
   # GET /documents or /documents.json
   def index
     @documents = Document.all
