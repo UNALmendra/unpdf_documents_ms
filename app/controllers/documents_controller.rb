@@ -28,47 +28,37 @@ class DocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    require "google/cloud/storage"
-    puts $GOOGLE_APPLICATION_CREDENTIALS
-    # name = document_params[:name]
-    # user = document_params[:user]
-    # type = document_params[:type]
-    # storage = document_params[:storage]
-
-    # file_base64 = params[:file]
-
-    # decode_base64_content = Base64.decode64(file_base64)
-    # filename = Rails.root.join( user, "#{SecureRandom.hex(3)}.pdf")
-    # ensure_tmp_dir_exists_for filename
-    # File.open(filename, 'wb') do |f|
-    #   f.write(decode_base64_content)
-    # end
-    # filepath = File.open(filename)
-
-    # @document = Document.new(document_params)
-    # project_id = "unpdf-349523"
     
-    # # If you don't specify credentials when constructing the client, the client
-    # # library will look for credentials in the environment.
-    # storage = Google::Cloud::Storage.new project: project_id 
+    name = document_params[:name]
+    user = document_params[:user]
+    type = document_params[:type]
 
-    # # Make an authenticated API request
-    # storage.buckets.each do |bucket|
-    #   puts bucket.name
-    # end
+    file_base64 = params[:file]
+    decode_base64_content = Base64.decode64(file_base64)
+    encoded_name_file = "#{SecureRandom.hex(3)}.pdf"
+    filename = Rails.root.join(user, encoded_name_file)
+    puts filename
+    ensure_tmp_dir_exists_for filename
+    File.open(filename, 'wb') do |f|
+      f.write(decode_base64_content)
+    end
+    file = File.open(filename)
+    
+    require "google/cloud/storage"
+    bucket_name = "unpdf_st"
 
+    storage = Google::Cloud::Storage.new
+    bucket  = storage.bucket bucket_name, skip_lookup: true
+    bucket.create_file file, filename
+    puts "Uploaded #{name} as #{filename} in bucket #{bucket_name}"
 
-    # # require "google/cloud/storage"
-    # # bucket_name = "undpf_st"
-    # # file_name = "test2.txt"
-
-    # # storage = Google::Cloud::Storage.new
-    # # bucket  = storage.bucket bucket_name, skip_lookup: true
-  
-    # # bucket.create_file file, file_name
-  
-    # # puts "Uploaded #{local_file_path} as #{file.name} in bucket #{bucket_name}"
-
+    new_document = { "name" => name, "type" => type, "user" => user, "storage" => filename }
+    @document = Document.new(new_document)
+    if @document.save
+      puts "it saved the document"
+    else
+      puts @document.errors
+    end
     # respond_to do |format|
     #   if @document.save
     #     format.html { redirect_to document_url(@document), notice: "Document was successfully created." }
